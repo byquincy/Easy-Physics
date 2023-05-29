@@ -209,8 +209,9 @@ def visualize(smallSizeImage, object, dotList):
 def start(fileName=FILE_NAME):
     # 파일 받아오기
     global data
-    with open(fileName, 'rb') as f:
-        data = pickle.load(f)
+    data = np.load("./%s" % fileName)
+    # with open(fileName, 'rb') as f:
+    #     data = pickle.load(f)
     
     # 메인 코드
     data = data[50:]

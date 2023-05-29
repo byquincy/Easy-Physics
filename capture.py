@@ -1,7 +1,6 @@
 import serial
 import cv2
 import numpy as np
-import pickle
 import datetime
 import os
 import time
@@ -63,11 +62,12 @@ def Get3DDistanceDataFromReceivedData(receivedData):
 
 def exitProcess(runAnalyze=False):
     fileName = 'output%d.p'%round(datetime.datetime.utcnow().timestamp() * 1000)
-    with open(
-        fileName, 
-        'wb'
-        ) as f:
-        pickle.dump(allOutputData, f)
+    np.save("./%s" % fileName, allOutputData)
+    # with open(
+    #     fileName, 
+    #     'wb'
+    #     ) as f:
+    #     pickle.dump(allOutputData, f)
     
     ser.write(COMMAND_STOP)
     ser.close()
