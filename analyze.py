@@ -215,7 +215,7 @@ def start(fileName=FILE_NAME):
     data = data[3:]
     for i in tqdm(data):
         processImage(i)
-        # time.sleep(0.06666666)
+        time.sleep(0.06666666)
     
     processedX = getRealWidth(objectTrackingLog[5:,0], zDots=objectTrackingLog[5:, 2])
     processedY = getRealHeight(objectTrackingLog[5:, 1], zDots=objectTrackingLog[5:, 2])
