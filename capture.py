@@ -20,6 +20,8 @@ capturedFrameNumber = 0
 
 def ReceivedCompleteData(receivedData):
     global dataLength3D
+    global capturedFrameNumber
+
     if len(receivedData) == dataLength3D:
         Visualize(receivedData)
     
