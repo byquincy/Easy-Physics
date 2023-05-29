@@ -16,11 +16,15 @@ DEFAULT_ID = 0xFF
 normalizeDistanceLimit = 4080
 dataLength3D = 14400
 allOutputData = []
+capturedFrameNumber = 0
 
 def ReceivedCompleteData(receivedData):
     global dataLength3D
     if len(receivedData) == dataLength3D:
         Visualize(receivedData)
+    
+    capturedFrameNumber += 1
+    print("\r%.2fs captured", capturedFrameNumber/15)
 
 def Visualize(receivedData):
     distanceData = Get3DDistanceDataFromReceivedData(receivedData)
@@ -28,14 +32,6 @@ def Visualize(receivedData):
         "t": round(datetime.datetime.utcnow().timestamp() * 1000),
         "d": distanceData
     })
-    """
-    image = DistanceDataToNormalizedNumpyArray(distanceData)
-    image = np.array(image, dtype=np.uint8)
-    image = image.reshape(60, 160)
-    image = cv2.resize(image, dsize=(480, 180), interpolation=cv2.INTER_NEAREST)
-    cv2.imshow('test', image)
-    cv2.waitKey(1)
-    """
 
 def Get3DDistanceDataFromReceivedData(receivedData):
     global dataLength3D,normalizeDistanceLimit
@@ -62,10 +58,7 @@ def DistanceDataToNormalizedNumpyArray(distanceData):
     result = result / normalizeDistanceLimit * 255
     return result
 
-#baud = 57600
-#baud = 115200
-# baud = 250000 
-baud = 3000000  # recommend baudrate under 3,000,000
+baud = 3000000
 ser = serial.Serial(  # port open
     port="/dev/ttyUSB0",  # <- USB connection 
     # '/dev/ttyAMA1',# <- GPIO connection 
@@ -85,7 +78,7 @@ if __name__ == "__main__":
     receivedData = [0 for i in range(dataLength3D)]
     while True:
         try:
-            for byte in tqdm(ser.readline()):
+            for byte in ser.readline():
                 parserPassed = False
                  # Parse Start
                 if step != CHECKSUM:   
