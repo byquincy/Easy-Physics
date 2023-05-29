@@ -41,13 +41,6 @@ nowDistanceMap = np.array([])
 
 
 ##################
-# 파일 불러오기
-##################
-with open(FILE_NAME, 'rb') as f:
-    data = pickle.load(f)
-
-
-##################
 # 영상 전처리
 ##################
 def makeRgbImage(originalData):
@@ -156,7 +149,7 @@ def getMoveObjectPosition(frame):
 
 def getRealWidth(xDots, zDots):
     result = np.array([])
-    processedXlist = (xDots-90)*WIDTH_RESOLUTION
+    processedXlist = (xDots-80)*WIDTH_RESOLUTION
     for x, z in zip(processedXlist, zDots):
         result = np.append(result, math.sin(x)*z)
     
@@ -164,11 +157,24 @@ def getRealWidth(xDots, zDots):
 
 def getRealHeight(yDots, zDots):
     result = np.array([])
-    processedXlist = (yDots-90)*HEIGHT_RESOLUTION
+    processedXlist = -1*(yDots-30)*HEIGHT_RESOLUTION
     for x, z in zip(processedXlist, zDots):
         result = np.append(result, math.sin(x)*z)
     
     return result
+
+def getSpeed(processedX, processedY, processedZ):
+    arrayLength = len(processedX)
+    distance = np.zeros(arrayLength-1, float)
+
+    for i in range(1, arrayLength):
+        distance[i-1] = math.sqrt(
+            (processedX[i] - processedX[i-1]) **2 + 
+            (processedY[i] - processedY[i-1])**2 + 
+            (processedZ[i] - processedZ[i-1])**2
+        )
+    
+    return distance * 15   # 1/15초마다거리이므로>15
 
 ##################
 # 영상 처리 & 시각화
@@ -200,26 +206,48 @@ def visualize(smallSizeImage, object, dotList):
     # while (cv2.waitKey(1)!=27): pass
 
 
-
-if __name__ == "__main__":
+def start(fileName=FILE_NAME):
+    # 파일 받아오기
+    global data
+    with open(fileName, 'rb') as f:
+        data = pickle.load(f)
+    
+    # 메인 코드
     data = data[50:]
     for i in tqdm(data):
         processImage(i['d'])
-        time.sleep(0.06666666)
+        # time.sleep(0.06666666)
     
-    # for i in objectTrackingLog:
-    #     print(i)
-    
+    processedX = getRealWidth(objectTrackingLog[5:,0], zDots=objectTrackingLog[5:, 2])
+    processedY = getRealHeight(objectTrackingLog[5:, 1], zDots=objectTrackingLog[5:, 2])
+    processedZ = objectTrackingLog[5:, 2]
+    processedSpped = getSpeed(processedX, processedY, processedZ)
+
+    speedFig = plt.figure(figsize=(8, 4))
+    ax = speedFig.add_subplot(111)
+    ax.plot(
+        np.array(range(len(processedSpped)))/15, 
+        processedSpped, 
+        color='y'
+    )
+
     fig = plt.figure(figsize=(6, 6))
-    # ax = fig.add_subplot(111, projection='3d')
-    ax = fig.add_subplot(111)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot(
+        processedX,
+        processedZ,     # 깊이축
+        processedY,
+
+        linewidth=1,
+        color='y'
+    )
     ax.scatter(
-        getRealWidth(objectTrackingLog[5:,0], zDots=objectTrackingLog[5:, 2]),       # 가로축
-        # objectTrackingLog[5:, 2],     # 깊이축
-        getRealHeight(60-objectTrackingLog[5:, 1], zDots=objectTrackingLog[5:, 2]),    # 세로축
+        processedX,
+        processedZ,     # 깊이축
+        processedY,
+
         c = np.array(range(len(objectTrackingLog[5:]))) / len(objectTrackingLog[5:]),
-        
-        cmap="Reds"
+        cmap="copper"
     )
 
     plt.show()

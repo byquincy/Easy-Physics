@@ -7,6 +7,8 @@ import os
 import time
 from tqdm import tqdm
 
+import analyze
+
 RUN_3D       =  [0x5A, 0x77, 0xFF, 0x02, 0x00, 0x08, 0x00, 0x0A]
 COMMAND_STOP =  [0x5A, 0x77, 0xFF, 0x02, 0x00, 0x02, 0x00, 0x00]
 
@@ -59,15 +61,19 @@ def Get3DDistanceDataFromReceivedData(receivedData):
         index += 1
     return distanceData
 
-def exitProcess():
+def exitProcess(runAnalyze=False):
+    fileName = 'output%d.p'%round(datetime.datetime.utcnow().timestamp() * 1000)
     with open(
-        'output%d.p'%round(datetime.datetime.utcnow().timestamp() * 1000), 
+        fileName, 
         'wb'
         ) as f:
         pickle.dump(allOutputData, f)
     
     ser.write(COMMAND_STOP)
     ser.close()
+
+    if runAnalyze:
+        analyze.start(fileName)
     print("Done!")
 
 baud = 3000000
