@@ -17,7 +17,7 @@ DEFAULT_ID = 0xFF
 
 normalizeDistanceLimit = 4080
 dataLength3D = 14400
-allOutputData = []
+allOutputData = np.array([])
 capturedFrameNumber = 0
 
 def ReceivedCompleteData(receivedData):
@@ -34,11 +34,8 @@ def ReceivedCompleteData(receivedData):
         exit(0)
 
 def Visualize(receivedData):
-    distanceData = Get3DDistanceDataFromReceivedData(receivedData)
-    allOutputData.append({
-        "t": round(datetime.datetime.utcnow().timestamp() * 1000),
-        "d": distanceData
-    })
+    distanceData = np.array(Get3DDistanceDataFromReceivedData(receivedData))
+    allOutputData = np.append(allOutputData, [distanceData])
 
 def Get3DDistanceDataFromReceivedData(receivedData):
     global dataLength3D,normalizeDistanceLimit
