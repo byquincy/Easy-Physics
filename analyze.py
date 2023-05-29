@@ -215,7 +215,7 @@ def start(fileName=FILE_NAME):
     # 메인 코드
     data = data[50:]
     for i in tqdm(data):
-        processImage(i['d'])
+        processImage(i)
         # time.sleep(0.06666666)
     
     processedX = getRealWidth(objectTrackingLog[5:,0], zDots=objectTrackingLog[5:, 2])
