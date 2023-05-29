@@ -86,12 +86,12 @@ if __name__ == "__main__":
     startTime = time.time()
     nowFrame = 0
     with tqdm(total=45) as pbar:
-        nowTime = time.time()
-        if (nowFrame < 45) and (int((nowTime-startTime)*15) > nowFrame):
-            pbar.update(int((nowTime-startTime)*15) - nowFrame)
-            nowFrame = int((nowTime-startTime)*15)
-        
         while True:
+            nowTime = time.time()
+            if (nowFrame < 45) and (int((nowTime-startTime)*15) > nowFrame):
+                pbar.update(int((nowTime-startTime)*15) - nowFrame)
+                nowFrame = int((nowTime-startTime)*15)
+
             try:
                 for byte in ser.readline():
                     parserPassed = False
