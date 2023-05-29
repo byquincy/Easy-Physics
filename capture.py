@@ -31,6 +31,7 @@ def ReceivedCompleteData(receivedData):
     print("\r%.2fs captured"%(capturedFrameNumber/15), end='')
 
     if capturedFrameNumber>=100:
+        exitProcess()
         exit(0)
 
 def Visualize(receivedData):
@@ -43,7 +44,7 @@ def Get3DDistanceDataFromReceivedData(receivedData):
     global dataLength3D,normalizeDistanceLimit
     index = 0
     distanceData = np.zeros(int(dataLength3D / 3 * 2), dtype=int)
-    for i in range(0, dataLength3D-2, 3):
+    for i in tqdm(range(0, dataLength3D-2, 3)):
         pixelFirst = receivedData[i] << 4 | receivedData[i+1] >> 4
         pixelSecond = (receivedData[i+1] & 0xf) << 8 | receivedData[i+2]
 
@@ -58,11 +59,15 @@ def Get3DDistanceDataFromReceivedData(receivedData):
         index += 1
     return distanceData
 
-def DistanceDataToNormalizedNumpyArray(distanceData):
-    global normalizeDistanceLimit
-    result = np.array(distanceData)
-    result = result / normalizeDistanceLimit * 255
-    return result
+def exitProcess():
+    with open(
+        'output%d.p'%round(datetime.datetime.utcnow().timestamp() * 1000), 
+        'wb'
+        ) as f:
+        pickle.dump(allOutputData, f)
+    
+    ser.write(COMMAND_STOP)
+    ser.close()
 
 baud = 3000000
 ser = serial.Serial(  # port open
@@ -135,10 +140,4 @@ if __name__ == "__main__":
                     if parserPassed:
                         ReceivedCompleteData(receivedData)
             except KeyboardInterrupt:
-                with open(
-                    'output%d.p'%round(datetime.datetime.utcnow().timestamp() * 1000), 
-                    'wb'
-                    ) as f:
-                    pickle.dump(allOutputData, f)
-                ser.write(COMMAND_STOP)
-                ser.close()
+                exitProcess()
