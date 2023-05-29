@@ -87,7 +87,7 @@ if __name__ == "__main__":
     CPC = 0
     
     bufferCounter = 0
-    receivedData = [0 for i in range(dataLength3D)]
+    receivedData = np.zeros(dataLength3D, dtype=int)
     startTime = time.time()
     nowFrame = 0
     with tqdm(total=100) as pbar:
@@ -127,7 +127,7 @@ if __name__ == "__main__":
                         if dataLength == 0:
                             step = CHECKSUM
                         bufferCounter = 0
-                        receivedData = [0 for i in range(dataLength)]  # clear
+                        receivedData = np.zeros(dataLength3D, dtype=int)  # clear
                     elif step == CHECKSUM:
                         step = HEADER1
                         if CPC == byte:
@@ -138,7 +138,6 @@ if __name__ == "__main__":
                     # Parse End
                     
                     if parserPassed:
-                        print("d")
-                        # ReceivedCompleteData(receivedData)
+                        ReceivedCompleteData(receivedData)
             except KeyboardInterrupt:
                 exitProcess()
