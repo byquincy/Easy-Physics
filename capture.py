@@ -86,8 +86,8 @@ if __name__ == "__main__":
     startTime = time.time()
     nowFrame = 0
     with tqdm(total=45) as pbar:
-        nowTime = time.time
-        if (nowFrame<45) and ((nowTime-startTime)//15 > nowFrame):
+        nowTime = time.time()
+        if (nowFrame < 45) and ((nowTime-startTime)//15 > nowFrame):
             pbar.update((nowTime-startTime)//15 - nowFrame)
             nowFrame = (nowTime-startTime)//15
         
