@@ -138,6 +138,7 @@ if __name__ == "__main__":
                     # Parse End
                     
                     if parserPassed:
-                        ReceivedCompleteData(receivedData)
+                        print("d")
+                        # ReceivedCompleteData(receivedData)
             except KeyboardInterrupt:
                 exitProcess()
