@@ -30,8 +30,8 @@ def ReceivedCompleteData(receivedData):
     capturedFrameNumber += 1
     print("\r%.2fs captured"%(capturedFrameNumber/15), end='')
 
-    # if capturedFrameNumber>=45:
-    #     exit(0)
+    if capturedFrameNumber>=100:
+        exit(0)
 
 def Visualize(receivedData):
     global allOutputData
@@ -85,10 +85,10 @@ if __name__ == "__main__":
     receivedData = [0 for i in range(dataLength3D)]
     startTime = time.time()
     nowFrame = 0
-    with tqdm(total=45) as pbar:
+    with tqdm(total=100) as pbar:
         while True:
             nowTime = time.time()
-            if (nowFrame < 45) and (int((nowTime-startTime)*15) > nowFrame):
+            if (nowFrame < 100) and (int((nowTime-startTime)*15) > nowFrame):
                 pbar.update(int((nowTime-startTime)*15) - nowFrame)
                 nowFrame = int((nowTime-startTime)*15)
 
