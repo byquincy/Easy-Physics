@@ -26,7 +26,7 @@ def ReceivedCompleteData(receivedData):
         Visualize(receivedData)
     
     capturedFrameNumber += 1
-    print("\r%.2fs captured", capturedFrameNumber/15)
+    print("\r%.2fs captured"%(capturedFrameNumber/15), end='')
 
 def Visualize(receivedData):
     distanceData = Get3DDistanceDataFromReceivedData(receivedData)
