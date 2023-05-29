@@ -39,7 +39,7 @@ def Visualize(receivedData):
     global allOutputData
 
     distanceData = Get3DDistanceDataFromReceivedData(receivedData)
-    allOutputData = np.append(allOutputData, distanceData, axis=1)
+    allOutputData = np.append(allOutputData, [distanceData], axis=0)
 
 def Get3DDistanceDataFromReceivedData(receivedData):
     global dataLength3D,normalizeDistanceLimit
