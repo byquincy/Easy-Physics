@@ -58,7 +58,7 @@ def makeRgbImage(originalData):
     ])
 
 def distanceDataToNormalizedNumpyArray(distanceData):
-    result = np.array(distanceData, dtype='float64')
+    result = distanceData.astype(np.float64)
     np.place(result, result>4000, 2000)
     result = result / NORMALIZE_DISTANCE_LIMIT * 255
     return result
