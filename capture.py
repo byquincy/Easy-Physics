@@ -18,7 +18,7 @@ DEFAULT_ID = 0xFF
 
 normalizeDistanceLimit = 4080
 dataLength3D = 14400
-allOutputData = np.array([])
+allOutputData = np.empty((0, 9600), np.float64)
 capturedFrameNumber = 0
 
 def ReceivedCompleteData(receivedData):
