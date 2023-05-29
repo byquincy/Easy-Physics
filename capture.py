@@ -61,7 +61,7 @@ def Get3DDistanceDataFromReceivedData(receivedData):
     return distanceData
 
 def exitProcess(runAnalyze=False):
-    fileName = 'output%d.p'%round(datetime.datetime.utcnow().timestamp() * 1000)
+    fileName = 'output%d.npy'%round(datetime.datetime.utcnow().timestamp() * 1000)
     np.save("./%s" % fileName, allOutputData)
     # with open(
     #     fileName, 
