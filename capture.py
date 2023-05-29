@@ -34,6 +34,8 @@ def ReceivedCompleteData(receivedData):
     #     exit(0)
 
 def Visualize(receivedData):
+    global allOutputData
+
     distanceData = np.array(Get3DDistanceDataFromReceivedData(receivedData))
     allOutputData = np.append(allOutputData, [distanceData])
 
