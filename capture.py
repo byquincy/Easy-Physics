@@ -68,6 +68,7 @@ def exitProcess():
     
     ser.write(COMMAND_STOP)
     ser.close()
+    print("Done!")
 
 baud = 3000000
 ser = serial.Serial(  # port open
