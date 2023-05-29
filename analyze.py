@@ -13,7 +13,7 @@ os.chdir( os.path.dirname(os.path.abspath(__file__)) )
 ##################
 # 상수 설정
 ##################
-FILE_NUMBER = 1
+FILE_NAME = "output1684809748222.p"
 NORMALIZE_DISTANCE_LIMIT = 2000
 MINIMUM_OBJECT_AREA = 3
 
@@ -24,14 +24,6 @@ SCREEN_MAGNIFICATION = 5
 
 HEIGHT_RESOLUTION = math.radians(13/10)
 WIDTH_RESOLUTION = math.radians(2/3)
-print(HEIGHT_RESOLUTION, WIDTH_RESOLUTION)
-
-FILE_DICT = {
-    1: "output1684809748222.p",
-    2: "output1684810030822.p",
-    3: "output1684810089086.p",
-    4: "output1684810236222.p",
-}
 
 
 ##################
@@ -51,7 +43,7 @@ nowDistanceMap = np.array([])
 ##################
 # 파일 불러오기
 ##################
-with open(FILE_DICT[FILE_NUMBER], 'rb') as f:
+with open(FILE_NAME, 'rb') as f:
     data = pickle.load(f)
 
 
