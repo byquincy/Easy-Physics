@@ -33,7 +33,7 @@ def ReceivedCompleteData(receivedData):
     print("\r%.2fs captured"%(capturedFrameNumber/15), end='')
 
     if capturedFrameNumber>=100:
-        exitProcess()
+        exitProcess(runAnalyze=True)
         exit(0)
 
 def Visualize(receivedData):
@@ -147,4 +147,4 @@ if __name__ == "__main__":
                     if parserPassed:
                         ReceivedCompleteData(receivedData)
             except KeyboardInterrupt:
-                exitProcess()
+                exitProcess(runAnalyze=True)
