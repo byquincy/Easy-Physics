@@ -30,8 +30,8 @@ def ReceivedCompleteData(receivedData):
     capturedFrameNumber += 1
     print("\r%.2fs captured"%(capturedFrameNumber/15), end='')
 
-    if capturedFrameNumber>=45:
-        exit(0)
+    # if capturedFrameNumber>=45:
+    #     exit(0)
 
 def Visualize(receivedData):
     distanceData = np.array(Get3DDistanceDataFromReceivedData(receivedData))
@@ -74,7 +74,8 @@ ser = serial.Serial(  # port open
 )
 if __name__ == "__main__":
     ser.write(RUN_3D)
-    print("send : ", RUN_3D)
+    # print("send : ", RUN_3D)
+    print("START")
     step = HEADER1
     CPC = 0
     
@@ -139,6 +140,3 @@ if __name__ == "__main__":
                     pickle.dump(allOutputData, f)
                 ser.write(COMMAND_STOP)
                 ser.close()
-
-
-
