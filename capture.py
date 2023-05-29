@@ -36,13 +36,13 @@ def ReceivedCompleteData(receivedData):
 def Visualize(receivedData):
     global allOutputData
 
-    distanceData = np.array(Get3DDistanceDataFromReceivedData(receivedData))
+    distanceData = Get3DDistanceDataFromReceivedData(receivedData)
     allOutputData = np.append(allOutputData, [distanceData])
 
 def Get3DDistanceDataFromReceivedData(receivedData):
     global dataLength3D,normalizeDistanceLimit
     index = 0
-    distanceData = [0 for i in range(int(dataLength3D / 3 * 2))]
+    distanceData = np.zeros(int(dataLength3D / 3 * 2), dtype=int)
     for i in range(0, dataLength3D-2, 3):
         pixelFirst = receivedData[i] << 4 | receivedData[i+1] >> 4
         pixelSecond = (receivedData[i+1] & 0xf) << 8 | receivedData[i+2]
