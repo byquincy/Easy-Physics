@@ -32,7 +32,7 @@ def ReceivedCompleteData(receivedData):
     capturedFrameNumber += 1
     print("\r%.2fs captured"%(capturedFrameNumber/15), end='')
 
-    if capturedFrameNumber>=100:
+    if capturedFrameNumber>=50:
         exitProcess(runAnalyze=True)
         exit(0)
 
@@ -97,10 +97,10 @@ if __name__ == "__main__":
     receivedData = np.zeros(dataLength3D, dtype=int)
     startTime = time.time()
     nowFrame = 0
-    with tqdm(total=100) as pbar:
+    with tqdm(total=50) as pbar:
         while True:
             nowTime = time.time()
-            if (nowFrame < 100) and (int((nowTime-startTime)*15) > nowFrame):
+            if (nowFrame < 50) and (int((nowTime-startTime)*15) > nowFrame):
                 pbar.update(int((nowTime-startTime)*15) - nowFrame)
                 nowFrame = int((nowTime-startTime)*15)
 
