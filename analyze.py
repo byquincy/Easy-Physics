@@ -13,7 +13,7 @@ os.chdir( os.path.dirname(os.path.abspath(__file__)) )
 ##################
 # 상수 설정
 ##################
-FILE_NAME = "output1684809748222.p"
+FILE_NAME = "output1685351265074.npy"
 NORMALIZE_DISTANCE_LIMIT = 2000
 MINIMUM_OBJECT_AREA = 3
 
@@ -210,11 +210,9 @@ def start(fileName=FILE_NAME):
     # 파일 받아오기
     global data
     data = np.load("./%s" % fileName)
-    # with open(fileName, 'rb') as f:
-    #     data = pickle.load(f)
     
     # 메인 코드
-    data = data[50:]
+    data = data[3:]
     for i in tqdm(data):
         processImage(i)
         # time.sleep(0.06666666)
@@ -254,3 +252,6 @@ def start(fileName=FILE_NAME):
     plt.show()
 
     exit(0)
+
+if __name__ == '__main__':
+    start()
