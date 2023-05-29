@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 import pickle
 import datetime
+import os
+import time
 from tqdm import tqdm
 
 RUN_3D       =  [0x5A, 0x77, 0xFF, 0x02, 0x00, 0x08, 0x00, 0x0A]
@@ -27,6 +29,9 @@ def ReceivedCompleteData(receivedData):
     
     capturedFrameNumber += 1
     print("\r%.2fs captured"%(capturedFrameNumber/15), end='')
+
+    if capturedFrameNumber>=45:
+        exit(0)
 
 def Visualize(receivedData):
     distanceData = Get3DDistanceDataFromReceivedData(receivedData)
@@ -78,57 +83,65 @@ if __name__ == "__main__":
     
     bufferCounter = 0
     receivedData = [0 for i in range(dataLength3D)]
-    while True:
-        try:
-            for byte in ser.readline():
-                parserPassed = False
-                 # Parse Start
-                if step != CHECKSUM:   
-                    CPC = CPC ^ byte
-                if step == PAYLOAD_DATA:
-                    receivedData[bufferCounter] = byte
-                    bufferCounter += 1
-                    if bufferCounter >= dataLength :
-                        step = CHECKSUM
-                elif step == HEADER1 and byte == NORMAL_MODE:
-                    step = HEADER2
-                elif step == HEADER2 and byte == PRODUCT_CODE:
-                    step = HEADER3
-                elif step == HEADER3 and byte == DEFAULT_ID:
-                    step = LENGTH_LSB
-                    CPC = 0
-                elif step == LENGTH_LSB:
-                    step = LENGTH_MSB
-                    lengthLSB = byte
-                elif step == LENGTH_MSB:
-                    step = PAYLOAD_HEADER
-                    lengthMSB = byte
-                    dataLength = (lengthMSB << 8)  | lengthLSB  - 1
-                elif step == PAYLOAD_HEADER:
-                    step = PAYLOAD_DATA
-                    if dataLength == 0:
-                        step = CHECKSUM
-                    bufferCounter = 0
-                    receivedData = [0 for i in range(dataLength)]  # clear
-                elif step == CHECKSUM:
-                    step = HEADER1
-                    if CPC == byte:
-                        parserPassed = True
-                else:
-                    step = HEADER1
-                    parserPassed = False 
-                # Parse End
-                
-                if parserPassed:
-                    ReceivedCompleteData(receivedData)
-        except KeyboardInterrupt:
-            with open(
-                'output%d.p'%round(datetime.datetime.utcnow().timestamp() * 1000), 
-                'wb'
-                ) as f:
-                pickle.dump(allOutputData, f)
-            ser.write(COMMAND_STOP)
-            ser.close()
+    startTime = time.time()
+    nowFrame = 0
+    with tqdm(total=45) as pbar:
+        nowTime = time.time
+        if (nowFrame<45) and ((nowTime-startTime)//15 > nowFrame):
+            pbar.update((nowTime-startTime)//15 - nowFrame)
+            nowFrame = (nowTime-startTime)//15
+        
+        while True:
+            try:
+                for byte in ser.readline():
+                    parserPassed = False
+                    # Parse Start
+                    if step != CHECKSUM:   
+                        CPC = CPC ^ byte
+                    if step == PAYLOAD_DATA:
+                        receivedData[bufferCounter] = byte
+                        bufferCounter += 1
+                        if bufferCounter >= dataLength :
+                            step = CHECKSUM
+                    elif step == HEADER1 and byte == NORMAL_MODE:
+                        step = HEADER2
+                    elif step == HEADER2 and byte == PRODUCT_CODE:
+                        step = HEADER3
+                    elif step == HEADER3 and byte == DEFAULT_ID:
+                        step = LENGTH_LSB
+                        CPC = 0
+                    elif step == LENGTH_LSB:
+                        step = LENGTH_MSB
+                        lengthLSB = byte
+                    elif step == LENGTH_MSB:
+                        step = PAYLOAD_HEADER
+                        lengthMSB = byte
+                        dataLength = (lengthMSB << 8)  | lengthLSB  - 1
+                    elif step == PAYLOAD_HEADER:
+                        step = PAYLOAD_DATA
+                        if dataLength == 0:
+                            step = CHECKSUM
+                        bufferCounter = 0
+                        receivedData = [0 for i in range(dataLength)]  # clear
+                    elif step == CHECKSUM:
+                        step = HEADER1
+                        if CPC == byte:
+                            parserPassed = True
+                    else:
+                        step = HEADER1
+                        parserPassed = False 
+                    # Parse End
+                    
+                    if parserPassed:
+                        ReceivedCompleteData(receivedData)
+            except KeyboardInterrupt:
+                with open(
+                    'output%d.p'%round(datetime.datetime.utcnow().timestamp() * 1000), 
+                    'wb'
+                    ) as f:
+                    pickle.dump(allOutputData, f)
+                ser.write(COMMAND_STOP)
+                ser.close()
 
 
 
